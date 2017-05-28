@@ -1,0 +1,23 @@
+{
+  "name": "attask",
+  "version": "0.0.1",
+  "description": "An approach to conditional promise chains with state and providers.",
+  "main": "bin/attask.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daretodave/attask.git"
+  },
+  "keywords": [
+    "promise",
+    "chainable"
+  ],
+  "author": "David Rehmat",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/daretodave/attask/issues"
+  },
+  "homepage": "https://github.com/daretodave/attask#readme"
+}
