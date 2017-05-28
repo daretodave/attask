@@ -1,8 +1,7 @@
 {
   "name": "attask",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "An approach to conditional promise chains with state and providers.",
-  "main": "bin/attask.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,6 +13,10 @@
     "promise",
     "chainable"
   ],
+
+  "main": "lib/attask.js",
+  "types": "lib/attask.d.ts",
+
   "author": "David Rehmat",
   "license": "MIT",
   "bugs": {

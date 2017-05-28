@@ -6,7 +6,7 @@ import {AttaskPolicy} from "./attask-policy";
 import {AttaskStore} from "./attask-store";
 import {AttaskMode} from "./attask-mode";
 
-export class Attask<P> implements Task<P> {
+export default class Attask<P> implements Task<P> {
 
     private chain:AttaskChain<P>;
     private child:Attask<P>;
@@ -173,9 +173,21 @@ export class Attask<P> implements Task<P> {
                     .run(provider, config)
                     .then(childResult => result && childResult);
             }
-
             return result;
         })
     }
 
 }
+
+export {AttaskBatch} from "./attask-batch";
+export {AttaskChain} from "./attask-chain";
+export {AttaskConsumer} from "./attask-consumer";
+export {AttaskListener} from "./attask-listener";
+export {AttaskMode} from "./attask-mode";
+export {AttaskOptional} from "./attask-optional";
+export {AttaskPolicy} from "./attask-policy";
+export {AttaskSimpleStore} from "./attask-simple-store";
+export {AttaskState} from "./attask-state";
+export {AttaskStore} from "./attask-store";
+export {AttaskTask} from "./attask-task";
+export {Task} from "./task";
