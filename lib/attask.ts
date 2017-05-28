@@ -5,11 +5,13 @@ import {Task, TaskerTask} from "./task";
 import {AttaskPolicy} from "./attask-policy";
 import {AttaskStore} from "./attask-store";
 import {AttaskMode} from "./attask-mode";
+import {AttaskResult} from "./attask-result";
 
 export default class Attask<P> implements Task<P> {
 
     private chain:AttaskChain<P>;
     private child:Attask<P>;
+    private completeHandler:any;
     private errorHandler:any;
     private silent:boolean;
     private linked:boolean;
@@ -154,9 +156,14 @@ export default class Attask<P> implements Task<P> {
         return this.async<P>().unlink();
     }
 
-    then(linked:boolean = true):Attask<P> {
+    finally(batchCompletion:AttaskListener<P, AttaskResult<P>>|any):Attask<P> {
+        this.completeHandler = batchCompletion;
+
+        return this;
+    }
+
+    after():Attask<P> {
         this.child = new Attask<P>(this, this.provider, this.attaskState, this.attaskMode);
-        this.child.linked = linked;
 
         return this.child;
     }

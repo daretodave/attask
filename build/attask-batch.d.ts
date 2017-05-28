@@ -14,6 +14,6 @@ export declare class AttaskBatch<P> {
     constructor(tasks: Task<P>[], policy: AttaskPolicy, mode: () => AttaskMode, errorListener: () => AttaskListener<P, any>, onFailedHandler: (reason: any) => any, silent: () => boolean);
     private error(message, task);
     private finish(batch, isError, message, task);
-    private execute(batch, provider, state, task);
-    run(provider: () => P, state: AttaskState): AttaskTask;
+    private execute(batch, task);
+    run(provider: () => P, state: AttaskState): AttaskTask<P>;
 }

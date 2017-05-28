@@ -27,7 +27,7 @@ export class AttaskBatch<P> {
         }
     };
 
-    private finish(batch:AttaskTask, isError: boolean, message: any, task: Task<P>) {
+    private finish(batch:AttaskTask<P>, isError: boolean, message: any, task: Task<P>) {
         if ((this.policy === AttaskPolicy.MUST && isError)
          || (this.policy === AttaskPolicy.WONT && !isError)) {
             this.error(message, task);
@@ -42,9 +42,7 @@ export class AttaskBatch<P> {
     };
 
     private execute(
-        batch:AttaskTask,
-        provider:P,
-        state: AttaskState,
+        batch:AttaskTask<P>,
         task: Task<P>
     ): Promise<any> {
 
@@ -56,9 +54,9 @@ export class AttaskBatch<P> {
 
         try {
             if(typeof task === 'function') {
-                promise = task(provider, state);
+                promise = task(batch.provider, batch.state);
             } else {
-                promise = task.run(provider, state);
+                promise = task.run(batch.provider, batch.state);
             }
         } catch (error) {
             this.finish(batch, true, error, task);
@@ -69,15 +67,15 @@ export class AttaskBatch<P> {
             .catch(error => this.finish(batch, false, error, task));
     };
 
-    run(provider: () => P, state: AttaskState): AttaskTask {
-        const batch = new AttaskTask();
+    run(provider: () => P, state: AttaskState): AttaskTask<P> {
+        const attachment = provider();
+        const batch = new AttaskTask(this.tasks, state, attachment);
 
         if (this.tasks.length === 0) {
             batch.promise = Promise.resolve(true);
 
             return batch;
         }
-
 
         let promise:Promise<any>;
 
@@ -87,15 +85,11 @@ export class AttaskBatch<P> {
                 task
             ) => promise.then(() => this.execute(
                 batch,
-                provider(),
-                state,
                 task
             )), Promise.resolve());
         } else {
             promise = Promise.all(this.tasks.map(task => this.execute(
                 batch,
-                provider(),
-                state,
                 task
             )))
         }

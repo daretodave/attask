@@ -4,6 +4,7 @@ import {AttaskTask} from "./attask-task";
 import {AttaskMode} from "./attask-mode";
 import {AttaskListener} from "./attask-listener";
 import {AttaskState} from "./attask-state";
+import {AttaskResult} from "./attask-result";
 
 export class AttaskChain<P> {
 
@@ -24,20 +25,48 @@ export class AttaskChain<P> {
         this.map.get(policy).push(...tasks);
     }
 
-    resolve(): Promise<boolean> {
+    resolve(completeListener:AttaskListener<P, AttaskResult<P>> = null): Promise<boolean> {
 
         return new Promise<boolean>((resolve: (success: boolean) => any, reject: (reason: any) => any) => {
 
+            const configuration = this.configuration();
+
             let isFailure: boolean = false;
 
-            let tasks: AttaskTask[] = [];
+            let tasks: AttaskTask<P>[] = [];
+
+            const complete = (isError:boolean, error:any) => {
+                if (completeListener) {
+
+                    const result:AttaskResult<P> = {
+                        attachment: this.provider(),
+                        state: configuration,
+                        isError:isError,
+                        error: error,
+                        tasks:tasks
+                    };
+
+                   if(typeof completeListener === 'function') {
+                       completeListener(result);
+                   } else {
+                       completeListener.onEvent(result, null);
+                   }
+                }
+
+                if(isError) {
+                    reject(error);
+                } else {
+                    resolve(isFailure);
+                }
+
+            };
 
             const failure = error => {
                 tasks.forEach(task => task.failed = true);
 
                 isFailure = true;
 
-                reject(error);
+                complete(true, error);
             };
 
             const batch = (policy: AttaskPolicy) => new AttaskBatch<P>(
@@ -49,8 +78,6 @@ export class AttaskChain<P> {
                 this.silent
             );
 
-            const configuration = this.configuration();
-
             tasks.push(
                 batch(AttaskPolicy.MUST).run(this.provider, configuration),
                 batch(AttaskPolicy.WONT).run(this.provider, configuration),
@@ -58,7 +85,7 @@ export class AttaskChain<P> {
             );
 
             Promise.all(tasks.map(task => task.promise))
-                .then(() => resolve(isFailure))
+                .then(() => complete(isFailure, null))
                 .catch(failure);
         });
 

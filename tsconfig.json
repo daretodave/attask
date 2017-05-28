@@ -5,7 +5,7 @@
     "declaration":true,
     "sourceMap": true,
     "outDir": "build",
-    "sourceRoot": "src"
+    "sourceRoot": "lib"
   },
   "exclude": [
     "node_modules",

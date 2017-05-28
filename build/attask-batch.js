@@ -36,17 +36,17 @@ class AttaskBatch {
         }
     }
     ;
-    execute(batch, provider, state, task) {
+    execute(batch, task) {
         if (batch.failed) {
             return Promise.resolve();
         }
         let promise;
         try {
             if (typeof task === 'function') {
-                promise = task(provider, state);
+                promise = task(batch.provider, batch.state);
             }
             else {
-                promise = task.run(provider, state);
+                promise = task.run(batch.provider, batch.state);
             }
         }
         catch (error) {
@@ -58,17 +58,18 @@ class AttaskBatch {
     }
     ;
     run(provider, state) {
-        const batch = new attask_task_1.AttaskTask();
+        const attachment = provider();
+        const batch = new attask_task_1.AttaskTask(this.tasks, state, attachment);
         if (this.tasks.length === 0) {
             batch.promise = Promise.resolve(true);
             return batch;
         }
         let promise;
         if (this.mode() === attask_mode_1.AttaskMode.SYNC) {
-            promise = this.tasks.reduce((promise, task) => promise.then(() => this.execute(batch, provider(), state, task)), Promise.resolve());
+            promise = this.tasks.reduce((promise, task) => promise.then(() => this.execute(batch, task)), Promise.resolve());
         }
         else {
-            promise = Promise.all(this.tasks.map(task => this.execute(batch, provider(), state, task)));
+            promise = Promise.all(this.tasks.map(task => this.execute(batch, task)));
         }
         batch.promise = promise.then(() => !batch.failed);
         return batch;

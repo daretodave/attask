@@ -1,1 +1,1 @@
-{"version":3,"file":"attask-task.js","sourceRoot":"Z:/workspace/web/ws/attask/src/","sources":["attask-task.ts"],"names":[],"mappings":";;AAAA;IAEI,YAAmB,SAAiB,KAAK;QAAtB,WAAM,GAAN,MAAM,CAAgB;IACzC,CAAC;CAIJ;AAPD,gCAOC"}
+{"version":3,"file":"attask-task.js","sourceRoot":"Z:/workspace/web/ws/attask/lib/","sources":["attask-task.ts"],"names":[],"mappings":";;AAGA;IAEI,YACW,KAAe,EACf,KAAiB,EACjB,QAAU,EACV,SAAiB,KAAK;QAHtB,UAAK,GAAL,KAAK,CAAU;QACf,UAAK,GAAL,KAAK,CAAY;QACjB,aAAQ,GAAR,QAAQ,CAAE;QACV,WAAM,GAAN,MAAM,CAAgB;IACjC,CAAC;CAIJ;AAXD,gCAWC"}

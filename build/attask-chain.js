@@ -17,20 +17,43 @@ class AttaskChain {
     push(policy, ...tasks) {
         this.map.get(policy).push(...tasks);
     }
-    resolve() {
+    resolve(completeListener = null) {
         return new Promise((resolve, reject) => {
+            const configuration = this.configuration();
             let isFailure = false;
             let tasks = [];
+            const complete = (isError, error) => {
+                if (completeListener) {
+                    const result = {
+                        attachment: this.provider(),
+                        state: configuration,
+                        isError: isError,
+                        error: error,
+                        tasks: tasks
+                    };
+                    if (typeof completeListener === 'function') {
+                        completeListener(result);
+                    }
+                    else {
+                        completeListener.onEvent(result, null);
+                    }
+                }
+                if (isError) {
+                    reject(error);
+                }
+                else {
+                    resolve(isFailure);
+                }
+            };
             const failure = error => {
                 tasks.forEach(task => task.failed = true);
                 isFailure = true;
-                reject(error);
+                complete(true, error);
             };
             const batch = (policy) => new attask_batch_1.AttaskBatch(this.map.get(policy), policy, this.mode, this.errorListener, failure, this.silent);
-            const configuration = this.configuration();
             tasks.push(batch(attask_policy_1.AttaskPolicy.MUST).run(this.provider, configuration), batch(attask_policy_1.AttaskPolicy.WONT).run(this.provider, configuration), batch(attask_policy_1.AttaskPolicy.MIGHT).run(this.provider, configuration));
             Promise.all(tasks.map(task => task.promise))
-                .then(() => resolve(isFailure))
+                .then(() => complete(isFailure, null))
                 .catch(failure);
         });
     }

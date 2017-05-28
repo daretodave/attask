@@ -103,9 +103,12 @@ class Attask {
     static unlink() {
         return this.async().unlink();
     }
-    then(linked = true) {
+    finally(batchCompletion) {
+        this.completeHandler = batchCompletion;
+        return this;
+    }
+    after() {
         this.child = new Attask(this, this.provider, this.attaskState, this.attaskMode);
-        this.child.linked = linked;
         return this.child;
     }
     run(provider = this.provider, config = this.attaskState) {

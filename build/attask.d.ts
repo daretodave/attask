@@ -3,6 +3,7 @@ import { AttaskState } from "./attask-state";
 import { Task, TaskerTask } from "./task";
 import { AttaskStore } from "./attask-store";
 import { AttaskMode } from "./attask-mode";
+import { AttaskResult } from "./attask-result";
 export default class Attask<P> implements Task<P> {
     private parent;
     private provider;
@@ -10,6 +11,7 @@ export default class Attask<P> implements Task<P> {
     private attaskMode;
     private chain;
     private child;
+    private completeHandler;
     private errorHandler;
     private silent;
     private linked;
@@ -39,7 +41,8 @@ export default class Attask<P> implements Task<P> {
     static link<P>(): Attask<P>;
     unlink(): Attask<P>;
     static unlink<P>(): Attask<P>;
-    then(linked?: boolean): Attask<P>;
+    finally(batchCompletion: AttaskListener<P, AttaskResult<P>> | any): Attask<P>;
+    after(): Attask<P>;
     run(provider?: P, config?: AttaskState): any;
 }
 export { Attask };
