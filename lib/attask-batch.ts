@@ -16,13 +16,13 @@ export class AttaskBatch<P> {
     }
 
     private error(message:any, task:Task<P>) {
-        const handler:AttaskListener<P, any> = this.errorListener();
+        const handler:any = this.errorListener();
 
         if (!this.silent() && handler) {
-            if(typeof handler === 'function') {
-                handler(message, task);
-            } else {
+            if(handler["onEvent"] && typeof handler.onEvent  === 'function') {
                 handler.onEvent(message, task);
+            } else {
+                handler(message, task);
             }
         }
     };
@@ -43,22 +43,22 @@ export class AttaskBatch<P> {
 
     private execute(
         batch:AttaskTask<P>,
-        task: Task<P>
+        task: any
     ): Promise<any> {
 
         if (batch.failed) {
             return Promise.resolve();
         }
 
-        let promise:Promise<boolean>;
+        let promise:Promise<any>;
 
         try {
-            if(typeof task === 'function') {
-                promise = task(batch.provider, batch.state);
-            } else {
-                promise = task.run(batch.provider, batch.state);
-            }
+            promise = task.call(task, batch.provider, batch.state);
         } catch (error) {
+            if (error && error.name === 'TypeError') {
+                return this.execute(batch, new task());
+            }
+
             this.finish(batch, true, error, task);
         }
 

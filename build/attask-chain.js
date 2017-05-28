@@ -31,11 +31,11 @@ class AttaskChain {
                         error: error,
                         tasks: tasks
                     };
-                    if (typeof completeListener === 'function') {
-                        completeListener(result);
+                    if (completeListener["onEvent"] && typeof completeListener.onEvent === 'function') {
+                        completeListener.onEvent(result, null);
                     }
                     else {
-                        completeListener.onEvent(result, null);
+                        completeListener(result);
                     }
                 }
                 if (isError) {

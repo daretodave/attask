@@ -15,11 +15,11 @@ class AttaskBatch {
     error(message, task) {
         const handler = this.errorListener();
         if (!this.silent() && handler) {
-            if (typeof handler === 'function') {
-                handler(message, task);
+            if (handler["onEvent"] && typeof handler.onEvent === 'function') {
+                handler.onEvent(message, task);
             }
             else {
-                handler.onEvent(message, task);
+                handler(message, task);
             }
         }
     }
@@ -42,14 +42,12 @@ class AttaskBatch {
         }
         let promise;
         try {
-            if (typeof task === 'function') {
-                promise = task(batch.provider, batch.state);
-            }
-            else {
-                promise = task.run(batch.provider, batch.state);
-            }
+            promise = task.call(task, batch.provider, batch.state);
         }
         catch (error) {
+            if (error && error.name === 'TypeError') {
+                return this.execute(batch, new task());
+            }
             this.finish(batch, true, error, task);
         }
         return Promise.resolve(promise)

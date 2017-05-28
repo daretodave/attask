@@ -46,11 +46,11 @@ export class AttaskChain<P> {
                         tasks:tasks
                     };
 
-                   if(typeof completeListener === 'function') {
-                       completeListener(result);
-                   } else {
-                       completeListener.onEvent(result, null);
-                   }
+                    if(completeListener["onEvent"] && typeof completeListener.onEvent  === 'function') {
+                        completeListener.onEvent(result, null);
+                    } else {
+                        (<any>completeListener)(result);
+                    }
                 }
 
                 if(isError) {
