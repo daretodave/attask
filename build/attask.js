@@ -123,6 +123,7 @@ class Attask {
     }
 }
 exports.default = Attask;
+exports.Attask = Attask;
 var attask_batch_1 = require("./attask-batch");
 exports.AttaskBatch = attask_batch_1.AttaskBatch;
 var attask_chain_2 = require("./attask-chain");

@@ -179,6 +179,7 @@ export default class Attask<P> implements Task<P> {
 
 }
 
+export {Attask};
 export {AttaskBatch} from "./attask-batch";
 export {AttaskChain} from "./attask-chain";
 export {AttaskConsumer} from "./attask-consumer";

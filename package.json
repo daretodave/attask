@@ -13,14 +13,15 @@
     "promise",
     "chainable"
   ],
-
-  "main": "lib/attask.js",
-  "types": "lib/attask.d.ts",
-
+  "main": "build/attask.js",
+  "types": "build/attask.d.ts",
   "author": "David Rehmat",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/daretodave/attask/issues"
   },
-  "homepage": "https://github.com/daretodave/attask#readme"
+  "homepage": "https://github.com/daretodave/attask#readme",
+  "devDependencies": {
+    "jest-cli": "^20.0.4"
+  }
 }

@@ -42,6 +42,7 @@ export default class Attask<P> implements Task<P> {
     then(linked?: boolean): Attask<P>;
     run(provider?: P, config?: AttaskState): any;
 }
+export { Attask };
 export { AttaskBatch } from "./attask-batch";
 export { AttaskChain } from "./attask-chain";
 export { AttaskConsumer } from "./attask-consumer";
