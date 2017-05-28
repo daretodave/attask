@@ -46,7 +46,15 @@ class AttaskBatch {
         }
         catch (error) {
             if (error && error.name === 'TypeError') {
-                return this.execute(batch, new task());
+                try {
+                    const runner = new task();
+                    if (runner["run"] && typeof runner["run"] === 'function') {
+                        return this.execute(batch, runner["run"]);
+                    }
+                }
+                catch (ignore) {
+                    // Not a class and original error holds true!
+                }
             }
             this.finish(batch, true, error, task);
         }

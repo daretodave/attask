@@ -173,7 +173,7 @@ export default class Attask<P> implements Task<P> {
             return this.parent.run(provider, config);
         }
 
-        return this.chain.resolve().then(result => {
+        return this.chain.resolve(this.completeHandler).then(result => {
             if(this.child !== null) {
 
                 return this.child
@@ -181,6 +181,8 @@ export default class Attask<P> implements Task<P> {
                     .then(childResult => result && childResult);
             }
             return result;
+        }).catch(error => {
+            // ignore, handled else-wise
         })
     }
 
