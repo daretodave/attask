@@ -19,6 +19,9 @@ Attask
 The above example will output **[0, 1, 2, 4, 10]**
 
 ## Getting Started
+
+[![npm version](https://badge.fury.io/js/attask.svg)](https://badge.fury.io/js/attask)
+
 ```
 npm install --save attask 
 ```
