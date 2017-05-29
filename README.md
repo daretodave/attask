@@ -27,13 +27,45 @@ Attask can be instantiated in a couple of ways, but the simplest way to create a
 
 Attask.async() tests attask to execute the provided tasks all at once
 ```javascript
-Attask.async().must(() => console.log("HELLO")).run();
+Attask
+  .async()
+  .must(
+      () => new Promise((resolve, reject) => setTimeout(() => {
+        console.log("A");
+        resolve(); // Simulate background task with timeout
+      }, 2500))
+      () => console.log("B"),
+      () => console.log("C")
+  )
+  .finally(() => console.log("DONE"));
+.run();
 ```
+Output 
+- 0ms:   B 
+- 0ms:   C
+- 2.5ms: A
+- 2.5ms: DONE
 
 Attask.sync() in contrast will guarantee execute the tasks in order
 ```javascript
-Attask.sync().must(() => console.log("HELLO")).run();
+Attask
+  .sync()
+  .must(
+      () => new Promise((resolve, reject) => setTimeout(() => {
+        console.log("A");
+        resolve(); // Simulate background task with timeout
+      }, 2500))
+      () => console.log("B"),
+      () => console.log("C")
+  )
+  .finally(() => console.log("DONE"));
+.run();
 ```
+Output 
+- 2.5ms: A 
+- 2.5ms: B
+- 2.5ms: C
+- 2.5ms: DONE
 
 ## Must, Might or Wont
 In order to populate chains to a work load you must use the methods **must**, **might**, or **wont**.
