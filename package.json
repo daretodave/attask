@@ -1,6 +1,6 @@
 {
   "name": "attask",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "An approach to conditional promise chains with state and providers.",
   "scripts": {
     "test": "jest"
